@@ -152,6 +152,31 @@
                                 </div>
                             </div>
                         </div>
+                            <div class="row margin-top-50">
+                              <div class="col-md-6">
+                                <aside class="filters">
+                                  <div class="panel panel-default">
+                                    <h4 class="panel-heading">Filter Search</h4>
+                                    <div class="panel-body">
+                                      <form>
+                                        <div class="form-group">
+                                          <div class="list-group" id="filters">
+                                            <div class="filter list-group-item">
+                                              <label for="date">Enter a Year</label>
+                                              <input class="form-control" id="datetime" type="text" placeholder="2019">
+                                            </div>
+                                            <div class="filter list-group-item">
+                                                <h4><b>State:</b></h4>
+                                                <select id="selDataset" onchange="optionChanged(this.value)"></select>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <button id="filter-btn" type="button" class="btn btn-default">Filter Table</button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </aside>
+                            </div>
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
