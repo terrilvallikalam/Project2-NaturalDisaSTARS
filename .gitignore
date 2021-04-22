@@ -1,3 +1,4 @@
-/.ipynb_checkpoints/Data_Cleaning-checkpoint.ipynb
+.ipynb_checkpoints/Data_Cleaning-checkpoint.ipynb
 /config.py
 /Resources/tornado_clean.csv
+__pycache__
