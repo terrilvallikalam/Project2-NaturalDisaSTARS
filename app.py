@@ -1,6 +1,7 @@
-from flask import Flask, render_template
 from config import sqlpassword
 import psycopg2
+from flask import Flask, jsonify
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -9,15 +10,22 @@ app = Flask(__name__)
 db_conn = psycopg2.connect(database="tornado_db", user="postgres", password=f"{sqlpassword}", host="127.0.0.1", port="5432")
 db_cursor = db_conn.cursor()
 
-@app.route("/", methods=['post', 'get'])
+@app.route("/")
 def index():
+    # render an index.html template and pass it the data you retrieved from the database
+    return render_template("index.html")  
+
+
+@app.route("/api/tornado_data")
+def api():
     # write a statement that finds all the items in the db and sets it to a variable
     db_cursor.execute("SELECT * FROM tornado_data")
     tornado_table = db_cursor.fetchall()
 
     # render an index.html template and pass it the data you retrieved from the database
-    return render_template("index.html", data=tornado_
-@app.route("")
+    return jsonify(tornado_table)  
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
