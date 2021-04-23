@@ -1,4 +1,3 @@
-
 // set the dimensions and margins of the graph
 var margin = {top: 80, right: 25, bottom: 30, left: 40},
   width = 450 - margin.left - margin.right,
@@ -14,8 +13,8 @@ var svg = d3.select("my_dataviz")
         "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.csv("../Resources/tornado_clean.csv", function(data) {
-
+d3.json("/api/tornado_data").then(function(data) {
+  console.log(data);
   // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
   var state = d3.map(data, function(d){return d.state;}).keys()
   var year = d3.map(data, function(d){return d.year;}).keys()
@@ -97,7 +96,7 @@ d3.csv("../Resources/tornado_clean.csv", function(data) {
     .on("mouseover", mouseover)
     .on("mousemove", mousemove)
     .on("mouseleave", mouseleave)
-})
+});
 
 // Add title to graph
 svg.append("text")
