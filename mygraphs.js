@@ -1,46 +1,60 @@
 function buildCharts() {
     d3.csv("Resources/tornado_clean.csv").then(data =>{
         console.log(data[0]);
-
         var tornadoNums = [];
         var years = [];
         var magnitudes = [];
         var states = [];
-
+        var widths = [];
+        var fatalities = [];
 
         data.forEach(tornado => {
             tornadoNums.push(tornado["tornado_num"])
             years.push(tornado["year"])
             magnitudes.push(tornado["magnitude"])
             states.push(tornado["state"])
+            widths.push(tornado["miles_traveled"])
+            fatalities.push(tornado["fatalities"])
         });
-        // console.log(tornadoNums);
 
         // Bubble Chart
         var traceBubble = [{
-            x: years,
-            y: tornadoNums,
+            x: tornadoNums,
+            y: widths,
             text: states,
             mode: 'markers',
             marker: {
-                size: magnitudes,
+                size: width,
                 colorscale: "Earth",
             }
         }];
-
         var layoutBubble = {
             xaxis: {
                 title: {
-                    text: "Magnitude"},
+                    text: "Miles Traveled"},
+                }
+        };
+        Plotly.newPlot("bubble", traceBubble,layoutBubble);
+
+        // Scatter Plot
+        var traceScatter = {
+            x: magnitudes,
+            y: fatalities,
+            mode: 'markers',
+            type: 'scatter'
+        };
+
+        var layoutScatter = {
+            xaxis: {
+                title: {
+                    text: "Tornado Magnitude vs. Fatalities"},
                 }
         };
 
-        Plotly.newPlot("bubble", traceBubble,layoutBubble);
+        Plotly.newPlot("scatter", traceScatter, layoutScatter);
+
 
 
     })
-
 }
-
 buildCharts();
-
