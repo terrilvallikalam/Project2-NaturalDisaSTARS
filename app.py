@@ -46,5 +46,7 @@ def api():
     # render an index.html template and pass it the data you retrieved from the database
     return jsonify(records)
 
+    #print(records)
+
 if __name__ == "__main__":
     app.run(debug=True)
