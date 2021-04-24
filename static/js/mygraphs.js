@@ -1,6 +1,7 @@
-function buildCharts() {
-    d3.csv("Resources/tornado_clean.csv").then(data =>{
+// function buildCharts() {
+    d3.json("/api/tornado_data").then(function(data) {
         console.log(data[0]);
+
         var tornadoNums = [];
         var years = [];
         var magnitudes = [];
@@ -52,9 +53,4 @@ function buildCharts() {
         };
 
         Plotly.newPlot("scatter", traceScatter, layoutScatter);
-
-
-
-    })
-}
-buildCharts();
+    });
