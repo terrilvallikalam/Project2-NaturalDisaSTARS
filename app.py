@@ -110,8 +110,9 @@ def api_state():
     
     # https://gist.github.com/rogerallen/1583593
     abbrev_us_state = dict(map(reversed, us_state_abbrev.items()))
-    state_names_dict = {"state_name":[]}
+    state_names_dict = {"state_name":[], "abbr":[]}
     for abbr in states:
+        state_names_dict["abbr"].append(abbr)
         state_names_dict["state_name"].append(abbrev_us_state[abbr])
 
     db_conn.close()
