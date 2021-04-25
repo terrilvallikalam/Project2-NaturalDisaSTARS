@@ -6,7 +6,6 @@ d3.json("http://127.0.0.1:5000/api/tornado_data_years").then(function(year){
         .enter()
         .append("option")
         .text(function(d) {
-            console.log(d);
             return d;
         })
 });
@@ -15,9 +14,12 @@ d3.json("http://127.0.0.1:5000/api/tornado_data_state").then(function(state){
     // console.log(state)
     var selectState = d3.select("select.sel-state");
     selectState.selectAll("option")
-        .data(state['state_name'])
+        .data(state["abbr"])
         .enter()
         .append("option")
+        .attr("value", function(d){
+            return d})
+        .data(state["state_name"])
         .text(function(d) {
             return d;
         })
