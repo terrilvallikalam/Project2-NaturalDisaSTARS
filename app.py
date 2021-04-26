@@ -4,6 +4,19 @@ from state_lookup import us_state_abbrev
 from flask import Flask, jsonify
 from flask import render_template
 
+import sqlalchemy
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, func
+
+########## CONNECT TO DATABASE #############
+# engine = create_engine(f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db")
+engine = create_engine(f"postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn")
+Base = automap_base()
+Base.prepare(engine, reflect=True)
+tornado_tbl = Base.classes.tornado_db
+#############################################
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -24,17 +37,17 @@ def tables():
 
 @app.route("/api/tornado_data")
 def api():
-    # postgres://ouvitqtn:BZiZY_67DtjmVHAZ7EtEAu5kMmDuUySX@queenie.db.elephantsql.com:5432/ouvitqtn
+    # postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn
     db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
+    # db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
     db_cursor = db_conn.cursor()
     # write a statement that finds all the items in the db and sets it to a variable
     db_cursor.execute("SELECT * FROM tornado_db")
     tornado_table = db_cursor.fetchall()
 
     #list of dictionaries
-    
     records = []
-    for row in tornado_table[0:12000]:
+    for row in tornado_table[0:500]:
         cols = db_cursor.description
         record = {}
         for i in range(len(cols)):
@@ -45,10 +58,31 @@ def api():
     # render an index.html template and pass it the data you retrieved from the database
     return jsonify(records)
 
+@app.route("/api/annual_summary")
+def annual_summary():
+    session = Session(engine)
+
+    results = session.query(tornado_tbl.year, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
+        func.sum(tornado_tbl.fatalities)).\
+        group_by(tornado_tbl.year).all()
+
+    annual_summary = []
+    for year, torn_sum, injury, fatality in results:
+        annual_summary_dict = {}
+        annual_summary_dict["year"] = year
+        annual_summary_dict["tornado_sum"] = torn_sum
+        annual_summary_dict["injuries"] = int(injury)
+        annual_summary_dict["fatalities"] = int(fatality)
+        annual_summary.append(annual_summary_dict)
+    session.close()
+
+    return jsonify(annual_summary)
+
 @app.route("/api/tornado_data_years")
 def api_year():
     # postgres://ouvitqtn:BZiZY_67DtjmVHAZ7EtEAu5kMmDuUySX@queenie.db.elephantsql.com:5432/ouvitqtn
     db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
+    # db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
     db_cursor = db_conn.cursor()
     # write a statement that finds all the items in the db and sets it to a variable
     db_cursor.execute("SELECT * FROM tornado_db")
@@ -79,11 +113,11 @@ def api_year():
     return jsonify(year_options)
 
 
-
 @app.route("/api/tornado_data_state")
 def api_state():
     # postgres://ouvitqtn:BZiZY_67DtjmVHAZ7EtEAu5kMmDuUySX@queenie.db.elephantsql.com:5432/ouvitqtn
     db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
+    # db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
     db_cursor = db_conn.cursor()
     # write a statement that finds all the items in the db and sets it to a variable
     db_cursor.execute("SELECT * FROM tornado_db")
@@ -122,4 +156,4 @@ def api_state():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)
