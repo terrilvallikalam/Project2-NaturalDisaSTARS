@@ -1,6 +1,45 @@
 // function buildCharts() {
+function init(){
+    var year = d3.select("select.sel-year").node().value;
+    var state = d3.select("select.sel-state").node().value;
+    bubbleChart(year, state);
+};
+
+function optionChangedYear(selection){
+    var year = parseInt(selection);
+    var state = undefined;
+    chartOptions(year, state);
+    
+};
+
+function optionChangedState(selection){
+    var state = selection;
+    var year = undefined;
+    chartOptions(year, state);
+};
+
+function chartOptions(year, state){
+    var Iyear = year;
+    var Istate = state;
+    if (Iyear === undefined) {
+        Iyear = parseInt(d3.select("select.sel-year").node().value);
+    }
+    if (Istate === undefined) {
+        Istate = d3.select("select.sel-state").node().value;
+    }
+    bubbleChart(Iyear,Istate);
+};
+
+function bubbleChart(selYear, selState) {
     d3.json("/api/tornado_data").then(function(data) {
         console.log(data[0]);
+        console.log(selYear);
+        console.log(selState);
+                
+        var yearFilter = data.filter(d=>d.year === selYear);
+        var yrStateFilter = yearFilter.filter(d=>d.state === selState);
+        
+        console.log(yrStateFilter);
 
         var tornadoNums = [];
         var years = [];
@@ -20,9 +59,11 @@
             widths.push(tornado["width_yards"])
         });
 
+        console.log(tornadoNums);
+
         // Bubble Chart
         var traceBubble = [{
-            x: tornadoNums,
+            x: years,
             y: miles,
             text: states,
             mode: 'markers',
@@ -36,9 +77,11 @@
             xaxis: {
                 title: {
                     text: "Miles Traveled"},
-                }
+                },
+            width: 600,
+            height: 400
         };
-        Plotly.newPlot("bubble", traceBubble,layoutBubble);
+        Plotly.newPlot("bubble", traceBubble, layoutBubble);
 
         // Scatter Plot
         var traceScatter = {
@@ -55,5 +98,8 @@
                 }
         };
 
-        Plotly.newPlot("scatter", traceScatter, layoutScatter);
+        Plotly.newPlot("scatter", [traceScatter], layoutScatter);
     });
+};
+
+bubbleChart();
