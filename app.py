@@ -34,6 +34,12 @@ def tables():
     # render an index.html template and pass it the data you retrieved from the database
     return render_template("tables.html")
 
+@app.route("/map")
+def map():
+    # render an index.html template and pass it the data you retrieved from the database
+    return render_template("map.html")
+
+
 @app.route("/api/tornado_data")
 def api():
     # postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn
