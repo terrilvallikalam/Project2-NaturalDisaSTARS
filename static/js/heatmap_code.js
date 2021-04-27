@@ -13,12 +13,15 @@ var svg = d3.select("my_dataviz")
         "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.json("/api/annual_summary").then(function(data) {
+d3.json("/api/heat_map").then(function(data) {
   console.log(data);
   // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
   var state = d3.map(data, function(d){return d.state;}).keys()
   var year = d3.map(data, function(d){return d.year;}).keys()
-
+  var number_tornado = d3.map(data, function(d){return d.tornado_sum;}).keys()
+  console.log(state);
+  console.log(year);
+  console.log(number_tornado);
   // Build X scales and axis:
   var x = d3.scaleBand()
     .range([ 0, width ])
@@ -46,7 +49,7 @@ d3.json("/api/annual_summary").then(function(data) {
     .domain([1,100])
 
   // create a tooltip
-  var tooltip = d3.select("#my_dataviz")
+  var tooltip = d3.select("my_dataviz")
     .append("div")
     .style("opacity", 0)
     .attr("class", "tooltip")
@@ -80,11 +83,11 @@ d3.json("/api/annual_summary").then(function(data) {
 
   // add the squares
   svg.selectAll()
-    .data(data, function(d) {return d.group+':'+d.variable;})
+    .data(data, function(d) {return d.state+':'+d.year;})
     .enter()
     .append("rect")
-      .attr("x", function(d) { return x(d.group) })
-      .attr("y", function(d) { return y(d.variable) })
+      .attr("x", function(d) { return x(d.state) })
+      .attr("y", function(d) { return y(d.year) })
       .attr("rx", 4)
       .attr("ry", 4)
       .attr("width", x.bandwidth() )
