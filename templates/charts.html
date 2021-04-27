@@ -9,6 +9,12 @@
         <title>Charts - USA Tornados</title>
         <link href="static/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -121,6 +127,35 @@
                                 .
                             </div>
                         </div>
+
+                        <div class="row margin-top-50">
+                            <div class="col-md-6">
+                              <aside class="filters">
+                                <div class="panel panel-default">
+                                  <h4 class="panel-heading">Filter Search</h4>
+                                  <div class="panel-body">
+                                    <form>
+                                      <div class="form-group">
+                                        <div class="list-group" id="filters">
+                                          <div class="filter list-group-item">
+                                              <h4>Select Year</h4>
+                                            <!-- <label for="date">Enter a Year</label>
+                                            <input class="form-control" id="datetime" type="text" placeholder="2019"> -->
+                                            <select class="sel-year" name="year" onchange="optionChangedYear(this.value)" style="width: 100%;"></select>
+                                          </div>
+                                          <div class="filter list-group-item">
+                                              <h4>Select State:</h4>
+                                          <select class="sel-state" style="width:80%;" onchange="optionChangedState(this.value)"></select>
+                                          </div>
+                                      </div>
+                                      </div>
+                                      <!-- <button id="filter-btn" type="button" class="btn btn-default">Filter Table</button> -->
+                                    </form>
+                                  </div>
+                                </div>
+                              </aside>
+                          </div>
+                        </div>
                         
                         <div class="card mb-4">
                             <div class="card-header">
@@ -168,12 +203,10 @@
                 </footer>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+        <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="assets/demo/chart-pie-demo.js"></script>
+        <script src="../static/js/selectors.js"></script>
     </body>
 </html>
