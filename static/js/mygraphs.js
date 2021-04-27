@@ -9,7 +9,6 @@ function optionChangedYear(selection){
     var year = parseInt(selection);
     var state = undefined;
     chartOptions(year, state);
-    
 };
 
 function optionChangedState(selection){
@@ -37,7 +36,8 @@ function bubbleChart(selYear, selState) {
         console.log(selState);
                 
         var yearFilter = data.filter(d=>d.year === selYear);
-        var yrStateFilter = yearFilter.filter(d=>d.state === selState);
+        console.log(yearFilter);
+        var yrStateFilter = yearFilter.filter(d=>d.state == selState);
         
         console.log(yrStateFilter);
 
@@ -59,8 +59,6 @@ function bubbleChart(selYear, selState) {
             widths.push(tornado["width_yards"])
         });
 
-        console.log(tornadoNums);
-
         // Bubble Chart
         var traceBubble = [{
             x: years,
@@ -73,6 +71,7 @@ function bubbleChart(selYear, selState) {
                 colorscale: "Earth",
             }
         }];
+
         var layoutBubble = {
             xaxis: {
                 title: {
@@ -98,8 +97,9 @@ function bubbleChart(selYear, selState) {
                 }
         };
 
-        Plotly.newPlot("scatter", [traceScatter], layoutScatter);
+        // Plotly.newPlot("scatter", [traceScatter], layoutScatter);
     });
 };
 
+init();
 bubbleChart();

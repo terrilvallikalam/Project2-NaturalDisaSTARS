@@ -102,23 +102,23 @@ def heat_map():
 def state_charts():
     session = Session(engine)
 
-    results = session.query(tornado_tbl.year, tornado_tbl.state, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
-        func.sum(tornado_tbl.fatalities), func.sum(tornado_tbl.miles_traveled)).\
-        group_by(tornado_tbl.year, tornado_tbl.state).all()
+    results = session.query(tornado_tbl.year, tornado_tbl.state, tornado_tbl.tornado_num, tornado_tbl.injury,\
+        tornado_tbl.fatalities, tornado_tbl.miles_traveled, tornado_tbl.magnitude).all()
 
-    annual_summary = []
-    for year, state, torn_sum, injury, fatality, miles in results:
-        annual_summary_dict = {}
-        annual_summary_dict["year"] = year
-        annual_summary_dict["state"] = state
-        annual_summary_dict["tornado_sum"] = torn_sum
-        annual_summary_dict["injuries"] = int(injury)
-        annual_summary_dict["fatalities"] = int(fatality)
-        annual_summary_dict["miles_traveled"] = miles
-        annual_summary.append(annual_summary_dict)
+    state_summary = []
+    for year, state, torn_sum, injury, fatality, miles, mag in results:
+        state_summary_dict = {}
+        state_summary_dict["year"] = year
+        state_summary_dict["state"] = state
+        state_summary_dict["tornado_sum"] = torn_sum
+        state_summary_dict["injuries"] = injury
+        state_summary_dict["fatalities"] = fatality
+        state_summary_dict["miles_traveled"] = miles
+        state_summary_dict["magnitude"] = mag
+        state_summary.append(state_summary_dict)
     session.close()
 
-    return jsonify(annual_summary)
+    return jsonify(state_summary)
 
 @app.route("/api/losses")
 def losses():
