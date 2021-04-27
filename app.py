@@ -8,7 +8,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 
-########## CONNECT TO DATABASE #############
+########### CONNECT TO DATABASE #############
 engine = create_engine(f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db")
 # engine = create_engine(f"postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn")
 Base = automap_base()
@@ -77,6 +77,49 @@ def annual_summary():
 
     return jsonify(annual_summary)
 
+@app.route("/api/heat_map")
+def heat_map():
+    session = Session(engine)
+
+    results = session.query(tornado_tbl.year, tornado_tbl.state, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
+        func.sum(tornado_tbl.fatalities)).\
+        group_by(tornado_tbl.year, tornado_tbl.state).all()
+
+    annual_summary = []
+    for year, state, torn_sum, injury, fatality in results:
+        annual_summary_dict = {}
+        annual_summary_dict["year"] = year
+        annual_summary_dict["state"] = state
+        annual_summary_dict["tornado_sum"] = torn_sum
+        annual_summary_dict["injuries"] = int(injury)
+        annual_summary_dict["fatalities"] = int(fatality)
+        annual_summary.append(annual_summary_dict)
+    session.close()
+
+    return jsonify(annual_summary)
+
+@app.route("/api/state_charts")
+def state_charts():
+    session = Session(engine)
+
+    results = session.query(tornado_tbl.year, tornado_tbl.state, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
+        func.sum(tornado_tbl.fatalities), func.sum(tornado_tbl.miles_traveled)).\
+        group_by(tornado_tbl.year, tornado_tbl.state).all()
+
+    annual_summary = []
+    for year, state, torn_sum, injury, fatality, miles in results:
+        annual_summary_dict = {}
+        annual_summary_dict["year"] = year
+        annual_summary_dict["state"] = state
+        annual_summary_dict["tornado_sum"] = torn_sum
+        annual_summary_dict["injuries"] = int(injury)
+        annual_summary_dict["fatalities"] = int(fatality)
+        annual_summary_dict["miles_traveled"] = miles
+        annual_summary.append(annual_summary_dict)
+    session.close()
+
+    return jsonify(annual_summary)
+
 @app.route("/api/losses")
 def losses():
     session = Session(engine)
@@ -95,7 +138,6 @@ def losses():
         loss_summary_dict["losses"] = int(loss)
         loss_summary.append(loss_summary_dict)
     session.close()
-    print (loss_summary[0])
     return jsonify(loss_summary)
 
 @app.route("/api/tornado_data_years")
