@@ -52,7 +52,7 @@ def api():
 
     #list of dictionaries
     records = []
-    for row in tornado_table:
+    for row in tornado_table[1:5000]:
         cols = db_cursor.description
         record = {}
         for i in range(len(cols)):
