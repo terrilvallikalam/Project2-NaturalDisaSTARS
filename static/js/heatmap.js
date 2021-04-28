@@ -13,11 +13,11 @@ var myMap = L.map("map", {
   
     console.log(response);
 
-    var latitude = d3.map(response, function(d){return d.latitude;}).keys()
-    var longitude = d3.map(response, function(d){return d.longitude;}).keys()
-    var tornado_num = d3.map(response, function(d){return d.index;}).keys()
+    // var latitude = d3.map(response, function(d){return d.latitude;}).keys()
+    // var longitude = d3.map(response, function(d){return d.longitude;}).keys()
+    // var tornado_num = d3.map(response, function(d){return d.index;}).keys()
 
-    console.log(tornado_num, latitude, longitude)
+    // console.log(tornado_num, latitude, longitude)
 
     // var combined = latitude.map((element, i) => element.concat(longitude[i]));
 
@@ -25,37 +25,34 @@ var myMap = L.map("map", {
 
   
     var location = [];
+    var tornado_list = [];
   
     for (var i = 0; i < response.length; i++) {
 
-        if (i === 'undefined') 
+        var latitude = response[i].latitude
+        var longitude = response[i].longitude
+        var tornado_num = response[i].index
 
-        latitude.drop([i]),
-        longitude.drop([i])
-        
-        else {
-        location.push([latitude[i], longitude[i]]);
-        }
+        // console.log(latitude, longitude)
 
-        var tornado = response[i];
+        location.push([latitude, longitude]);
+        tornado_list.push(tornado_num);
 
     };
 
-    location = location.slice(0, 374);
-
     console.log(location);
 
-    // var tornado = {tornado_num, location}
+    var tornado = {tornado_list, location}
 
-    // console.log(tornado)
+    console.log(tornado)
 
     // L.marker(tornado.location)
     //     .addTo(myMap);
 
 
     var heat = L.heatLayer(location, {
-      radius: 30,
-      blur: 5
+      radius: 20,
+      blur: 3
     }).addTo(myMap);
   
   });
