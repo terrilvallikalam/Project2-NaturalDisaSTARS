@@ -53,26 +53,41 @@ def api():
             record[cols[i].name] = row[i]
         records.append(record)
     db_conn.close()
-    
     # render an index.html template and pass it the data you retrieved from the database
     return jsonify(records)
 
-@app.route("/api/annual_summary")
-def annual_summary():
+@app.route("/api/annual_summary/<state>")
+def annual_summary(state='all'):
     session = Session(engine)
+    if state == 'all':
+        group_by_columns = (tornado_tbl.year,)
+    else:
+        group_by_columns = (tornado_tbl.year,tornado_tbl.state)
+    
 
-    results = session.query(tornado_tbl.year, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
-        func.sum(tornado_tbl.fatalities)).\
-        group_by(tornado_tbl.year).all()
+    results = session.query(*group_by_columns, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
+        func.sum(tornado_tbl.fatalities))
+
+    if state != 'all':
+        results = results.filter_by(state=state)
+    
+    results = results.group_by(*group_by_columns).all()
 
     annual_summary = []
-    for year, torn_sum, injury, fatality in results:
+
+    for result in results:
         annual_summary_dict = {}
-        annual_summary_dict["year"] = year
-        annual_summary_dict["tornado_sum"] = torn_sum
-        annual_summary_dict["injuries"] = int(injury)
-        annual_summary_dict["fatalities"] = int(fatality)
+        annual_summary_dict["year"] = result[0]
+        offset = 0
+        if state != 'all':
+            offset = 1
+            annual_summary_dict["state"] = result[1]
+
+        annual_summary_dict["tornado_sum"] = result[1+offset]
+        annual_summary_dict["injuries"] = int(result[2+offset])
+        annual_summary_dict["fatalities"] = int(result[3+offset])
         annual_summary.append(annual_summary_dict)
+
     session.close()
 
     return jsonify(annual_summary)
@@ -85,15 +100,15 @@ def heat_map():
         func.sum(tornado_tbl.fatalities)).\
         group_by(tornado_tbl.year, tornado_tbl.state).all()
 
-    annual_summary = []
+    heat_map = []
     for year, state, torn_sum, injury, fatality in results:
-        annual_summary_dict = {}
-        annual_summary_dict["year"] = year
-        annual_summary_dict["state"] = state
-        annual_summary_dict["tornado_sum"] = torn_sum
-        annual_summary_dict["injuries"] = int(injury)
-        annual_summary_dict["fatalities"] = int(fatality)
-        annual_summary.append(annual_summary_dict)
+        heat_map_dict = {}
+        heat_map_dict["year"] = year
+        heat_map_dict["state"] = state
+        heat_map_dict["tornado_sum"] = torn_sum
+        heat_map_dict["injuries"] = int(injury)
+        heat_map_dict["fatalities"] = int(fatality)
+        heat_map.append(heat_map_dict)
     session.close()
 
     return jsonify(annual_summary)

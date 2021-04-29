@@ -8,16 +8,16 @@ var svgPadding = {
 
 };
 
-function linePlot(){
-    d3.json("/api/annual_summary").then(function (data){
-    
+function linePlot(state){
+    d3.json(`/api/annual_summary/${state}`).then(function (data){
+        console.log(data);
         const tornadoData = {
             years: [],
             tornSum: [],
             injuries: [],
             fatalities: []
         };
-
+        
         data.forEach(d => {
             tornadoData.years.push(d.year);
             tornadoData.tornSum.push(d.tornado_sum);
@@ -30,6 +30,7 @@ function linePlot(){
         var injuries = tornadoData.injuries;
         var fatalities = tornadoData.fatalities;
 
+    
         var tornados = {
             x: years,
             y: tornadoSum,
@@ -72,7 +73,7 @@ function linePlot(){
     });
 };
 
-function barChart(){
+function barChart(selState){
     d3.json("/api/losses").then(function(data){
         const tornadoDamage = {
             years: [],
@@ -115,10 +116,19 @@ function barChart(){
     });
 };
 
+function init(){
+    var state = "all";
+    linePlot(state);
+    barChart();
+};
+
+init();
+
+function optionChangedState(selection){
+    var state = selection;
+    linePlot(state);
+};
 
 
-linePlot();
-barChart();
-
-d3.select("#linePlot").select("div.svg-container").select("svg.main-svg")
-    .attr("viewBox", `0, 0, ${svgWidth}, ${svgHeight}`)
+// d3.select("#linePlot").select("div.svg-container").select("svg.main-svg")
+//     .attr("viewBox", `0, 0, ${svgWidth}, ${svgHeight}`)
