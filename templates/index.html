@@ -97,14 +97,17 @@
                                       <div class="form-group">
                                         <div class="list-group" id="filters">
                                           <div class="filter list-group-item">
-                                              <h4>Select Year</h4>
+                                              <!-- <h4>Select Year</h4> -->
                                             <!-- <label for="date">Enter a Year</label>
                                             <input class="form-control" id="datetime" type="text" placeholder="2019"> -->
-                                            <select class="sel-year" name="year" onchange="optionChangedYear(this.value)" style="width: 100%;"></select>
-                                          </div>
+                                            <!-- <select class="sel-year" name="year" onchange="optionChangedYear(this.value)" style="width: 100%;"></select>
+                                          </div> -->
                                           <div class="filter list-group-item">
                                               <h4>Select State:</h4>
-                                          <select class="sel-state" style="width:80%;" onchange="optionChangedState(this.value)"></select>
+                                                <select class="sel-state" style="width:80%;" onchange="optionChangedState(this.value)">
+                                                    <option value="all">All States</option>
+                                                </select>
+                                            
                                           </div>
                                       </div>
                                       </div>
@@ -297,10 +300,10 @@
         <!-- <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> -->
 
         <!-- ====================JavaScript files to pull charts==================  -->
+        <script src="../static/js/selectors.js"></script>
         <script src="../static/js/line_plot.js"></script>
         <script src="../static/js/scripts.js"></script>
         <!-- <script src="../static/js/mygraphs.js"></script> -->
-        <script src="../static/js/line_plot.js"></script>
         
     </body>
 </html>

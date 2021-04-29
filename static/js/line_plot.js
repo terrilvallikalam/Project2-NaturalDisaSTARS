@@ -73,8 +73,8 @@ function linePlot(state){
     });
 };
 
-function barChart(selState){
-    d3.json("/api/losses").then(function(data){
+function barChart(state){
+    d3.json(`/api/losses/${state}`).then(function(data){
         const tornadoDamage = {
             years: [],
             losses: []
@@ -119,7 +119,7 @@ function barChart(selState){
 function init(){
     var state = "all";
     linePlot(state);
-    barChart();
+    barChart(state);
 };
 
 init();
@@ -127,8 +127,5 @@ init();
 function optionChangedState(selection){
     var state = selection;
     linePlot(state);
+    barChart(state);
 };
-
-
-// d3.select("#linePlot").select("div.svg-container").select("svg.main-svg")
-//     .attr("viewBox", `0, 0, ${svgWidth}, ${svgHeight}`)
