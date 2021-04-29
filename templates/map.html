@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Map- USA Tornados</title>
+
+    <!-- Leaflet JavaScript code -->
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
+
+    <!-- Leaflet heatmap plugin-->
+    <script type="text/javascript" src="../static/js/leaflet-heat.js"></script>
+    
+    <!-- D3 library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"
+    integrity="sha512-L5K9Bf852XyB+wrvRFGwWzfhVI+TZqJlgwzX9yvrfhILuzIZfrcQO4au9D9eVDnkQ6oqYr9v2QwJdFo+eKE50Q=="
+    crossorigin="anonymous"></script>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
+    
+    <!-- Our CSS  -->
+    <link rel="stylesheet" href="../static/js/mapstyle.css" />
+    <link href="static/styles.css" rel="stylesheet" />
+
+  </head>
+
+  <body class="sb-nav-fixed">
+
+    <!-- ====================Nav Bar==================  -->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">Natural DisaSTARS</a>
+      <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+    </nav>
+
+    <!-- ====================Side Bar==================  -->
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="/">
+
+                            <!-- ====================main page link==================  -->
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        
+                        <div class="sb-sidenav-menu-heading">Addons</div>
+                        <a class="nav-link" href="charts">
+
+                            <!-- ====================chart link==================  -->
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Charts
+                        </a>
+                        <a class="nav-link" href="tables">
+
+                            <!-- ====================Table link==================  -->
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Tables
+                        </a>
+                        <a class="nav-link" href="map">
+
+                            <!-- ====================Map link==================  -->
+                            <div class="sb-nav-link-icon"><i class="fas fa-globe"></i></div>
+                            Map
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ====================Main page layout==================  -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    <h1 class="mt-4">Heat Map </h1>
+                    <ol class="breadcrumb mb-4">
+                      <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                      <li class="breadcrumb-item active">Map</li>
+                    </ol>
+                
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            Leaflet is a third party plugin that is used to generate the heat map below. For more information about Leaflet, please visit the
+                            <a target="_blank" href="https://leafletjs.com/">official JavaScript Leaflet documentation</a>
+                        </div>
+                    </div> 
+
+                    <div class="card-header">
+                        <i class="fas fa-globe mr-1"></i>
+                        Tornado HeatMap
+                    </div>
+                </div>
+                    <div class="col-xl-12" id="map"></div>
+            </main>
+
+            <!-- ====================Footer color bar==================  -->
+            <footer class="py-4 bg-light mt-auto">
+              <div class="container-fluid">
+                  <div class="d-flex align-items-center justify-content-between small"></div>
+              </div>
+          </footer>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript file -->
+    <script type="text/javascript" src="../static/js/heatmap.js"></script>
+
+
+  </body>
+
+</html>

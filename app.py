@@ -34,6 +34,12 @@ def tables():
     # render an index.html template and pass it the data you retrieved from the database
     return render_template("tables.html")
 
+@app.route("/map")
+def map():
+    # render an index.html template and pass it the data you retrieved from the database
+    return render_template("map.html")
+
+
 @app.route("/api/tornado_data")
 def api():
     # postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn
@@ -46,7 +52,7 @@ def api():
 
     #list of dictionaries
     records = []
-    for row in tornado_table[0:500]:
+    for row in tornado_table[1:5000]:
         cols = db_cursor.description
         record = {}
         for i in range(len(cols)):
