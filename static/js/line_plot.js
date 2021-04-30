@@ -125,6 +125,7 @@ init();
 
 function optionChangedState(selection){
     var state = selection;
+    console.log(state)
     linePlot(state);
     barChart(state);
 };
