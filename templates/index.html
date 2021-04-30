@@ -90,18 +90,18 @@
                         <div class="row margin-top-50">
                             <div class="col-md-6">
                               <aside class="filters">
-                                <div class="panel panel-default">
+                                <!-- <div class="panel panel-default">
                                   <h4 class="panel-heading">Filter Search</h4>
-                                  <div class="panel-body">
-                                    <form>
+                                  <div class="panel-body"> -->
+                                    <!-- <form>
                                       <div class="form-group">
                                         <div class="list-group" id="filters">
                                           <div class="filter list-group-item">
-                                              <!-- <h4>Select Year</h4> -->
-                                            <!-- <label for="date">Enter a Year</label>
-                                            <input class="form-control" id="datetime" type="text" placeholder="2019"> -->
-                                            <!-- <select class="sel-year" name="year" onchange="optionChangedYear(this.value)" style="width: 100%;"></select>
-                                          </div> -->
+                                              <h4>Select Year</h4>
+                                            <label for="date">Enter a Year</label>
+                                            <input class="form-control" id="datetime" type="text" placeholder="2019">
+                                            <select class="sel-year" name="year" onchange="optionChangedYear(this.value)" style="width: 100%;"></select>
+                                          </div>
                                           <div class="filter list-group-item">
                                               <h4>Select State:</h4>
                                                 <select class="sel-state" style="width:80%;" onchange="optionChangedState(this.value)">
@@ -111,10 +111,10 @@
                                           </div>
                                       </div>
                                       </div>
-                                      <!-- <button id="filter-btn" type="button" class="btn btn-default">Filter Table</button> -->
-                                    </form>
-                                  </div>
-                                </div>
+                                      <button id="filter-btn" type="button" class="btn btn-default">Filter Table</button>
+                                    </form> -->
+                                  <!-- </div>
+                                </div> -->
                               </aside>
                           </div>
                         </div>
@@ -163,22 +163,92 @@
                         <!-- ====================Card holders for each graph on main page==================  -->
                         <div class="row">
 
-                            <!-- ====================Tornado Image==================  -->
-                            <div class="col-xl-6">
+                            <!-- ====================Charts Image==================  -->
+                            <div class="col-xl-8">
                                 <div class="card mb-6">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar mr-1"></i>
+                                        Charts
+                                    </div>
+                                    <h3>Check out our charts here:</h3>
+                                    <form method="post" enctype="multipart/form-data" align="middle" >
+                                        <a href="charts"><img src="{{url_for('static', filename='charts.jpg')}}" /></a>
+                                      </form>
+                                </div>
+                            </div>
+
+                            <!-- ====================Fun Facts Image==================  -->
+                            <div class="col-xl-4">
+                                <div class="card mb-6">
+                                    <div class="card-header">
+                                        <i class="fas fa-bolt mr-1"></i>
+                                        Fun Facts about Tornados
+                                    </div>
+                                    <h3>10 fun facts about tornados you might not have known: <a target="_blank" href="https://www.accuweather.com/en/weather-news/10-tornado-facts-you-might-not-know-about/350390">Click Here.</a></h3>
+                                    <form method="post" enctype="multipart/form-data" align="middle" >
+                                        <a href="https://www.accuweather.com/en/weather-news/10-tornado-facts-you-might-not-know-about/350390"><img src="{{url_for('static', filename='funfacts.jpg')}}"/></a>
+                                      </form>
+                                </div>
+                            </div>
+
+                            <!-- ====================HeatMap Image==================  -->
+                            <div class="col-xl-8">
+                                <div class="card mb-6">
+                                    <div class="card-header">
+                                        <i class="fas fa-map mr-1"></i>
+                                        Heat Map
+                                    </div>
+                                    <h3>Check out our heat map here:</h3>
+                                    <form method="post" enctype="multipart/form-data" align="middle" >
+                                        <a href="map"><img src="{{url_for('static', filename='heatmap.jpg')}}" /></a>
+                                      </form>
+                                </div>
+                            </div>
+
+                            <!-- ====================Tornado Basics Image==================  -->
+                            <div class="col-xl-4">
+                                <div class="card mb-6">
+                                    <div class="card-header">
+                                        <i class="fas fa-cloud mr-1"></i>
+                                        Tornado Basics 101
+                                    </div>
+                                    <h3>What is a tonado, what to look out for and more: <a target="_blank" href="https://www.nssl.noaa.gov/education/svrwx101/tornadoes/">Click Here.</a></h3>
+                                    <form method="post" enctype="multipart/form-data" align="middle" >
+                                        <a href="https://www.nssl.noaa.gov/education/svrwx101/tornadoes/"><img src="{{url_for('static', filename='tornadobasics.jpg')}}"/></a>
+                                      </form>
+                                </div>
+                            </div>
+
+                            <!-- ====================Table Image==================  -->
+                            <div class="col-xl-8">
+                                <div class="card mb-6">
+                                    <div class="card-header">
+                                        <i class="fas fa-th-list mr-1"></i>
+                                        Data Table
+                                    </div>
+                                    <h3>View the full data set here:</h3>
+                                    <form method="post" enctype="multipart/form-data" align="middle" >
+                                        <a href="tables"><img src="{{url_for('static', filename='table.jpg')}}" /></a>
+                                      </form>
+                                </div>
+                            </div>
+
+                            <!-- ====================Tornado Safety Image==================  -->
+                            <div class="col-xl-4">
+                                <div class="card mb-6">
+                                    <div class="card-header">
+                                        <i class="fas fa-warning mr-1"></i>
                                         Tornado Safety
                                     </div>
                                     <h3>For information on tornado safety: <a target="_blank" href="https://www.weather.gov/safety/tornado">Click Here.</a></h3>
                                     <form method="post" enctype="multipart/form-data" align="middle" >
-                                        <img src="{{url_for('static', filename='TornadoPhoto.jpg')}}"/>
+                                        <a href="https://www.weather.gov/safety/tornado"><img src="{{url_for('static', filename='TornadoPhoto.jpg')}}"/></a>
                                       </form>
                                 </div>
                             </div>
 
                             <!-- ====================Line Plot==================  -->
-                            <div class="col-xl-6">
+                            <!-- <div class="col-xl-6">
                                 <div class="card mb-6">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar mr-1"></i>
@@ -186,10 +256,10 @@
                                     </div>
                                     <div id="linePlot" width="100%" height="40" align="middle"> </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- ====================Bubble Chart==================  -->
-                            <div class="col-xl-6">
+                            <!-- <div class="col-xl-6">
                                 <div class="card mb-6">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area mr-1"></i>
@@ -197,10 +267,10 @@
                                     </div>
                                     <div id="bubble" width="100%" height="40" align="middle"></div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- ====================Bar Chart==================  -->
-                            <div class="col-xl-6">
+                            <!-- <div class="col-xl-6">
                                 <div class="card mb-6">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area mr-1"></i>
@@ -208,10 +278,10 @@
                                     </div>
                                     <div id="loss-bar" width="100%" height="40" align="middle"></div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- ====================Bubble Slider==================  -->
-                            <div class="col-xl-12">
+                            <!-- <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-globe mr-1"></i>
@@ -219,7 +289,7 @@
                                     </div>
                                     <div id="bubble-slider" width="100%" height="40" align="middle"></div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- ====================Heat Map==================  -->
                             <!-- <div class="col-xl-12">
@@ -314,8 +384,8 @@
         <!-- <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> -->
 
         <!-- ====================JavaScript files to pull charts==================  -->
-        <script src="../static/js/selectors.js"></script>
-        <script src="../static/js/line_plot.js"></script>
+        <!-- <script src="../static/js/selectors.js"></script>
+        <script src="../static/js/line_plot.js"></script> -->
         <script src="../static/js/scripts.js"></script>
         <!-- <script src="../static/js/mygraphs.js"></script> -->
         

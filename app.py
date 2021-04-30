@@ -20,7 +20,7 @@ loss_tbl = Base.classes.losses
 #############################################
 
 #----------------- Loading Image ----------------#
-UPLOAD_FOLDER = '../static/TornadoPhoto.jpg'
+UPLOAD_FOLDER = '../static'
 ALLOWED_EXTENSIONS = {'jpg'}
 
 app = Flask(__name__)
