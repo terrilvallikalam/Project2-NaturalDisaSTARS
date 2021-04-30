@@ -1,13 +1,14 @@
 from config import sqlpassword
 from state_lookup import us_state_abbrev
 from flask import Flask, jsonify
-from flask import render_template
+from flask import render_template, redirect, url_for, request
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
 import pandas as pd
+from werkzeug.utils import secure_filename
 
 ########### CONNECT TO DATABASE #############
 engine = create_engine(f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db")
@@ -18,29 +19,48 @@ tornado_tbl = Base.classes.tornado_db
 loss_tbl = Base.classes.losses
 #############################################
 
+#----------------- Loading Image ----------------#
+UPLOAD_FOLDER = '../static/TornadoPhoto.jpg'
+ALLOWED_EXTENSIONS = {'jpg'}
+
 app = Flask(__name__)
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+#----------------- Route to Index ----------------#
 @app.route("/")
 def index():
     # render an index.html template and pass it the data you retrieved from the database
     return render_template("index.html")
 
+#----------------- Load Image to Index ----------------#
+def upload_file():
+    if request.method == 'POST':
+        if 'file1' not in request.files:
+            return 'there is no file1 in form!'
+        file1 = request.files['file1']
+        path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+        file1.save(path)
+        return path
+
+#----------------- Route to Charts ----------------#
 @app.route("/charts")
 def charts():
-    # render an index.html template and pass it the data you retrieved from the database
     return render_template("charts.html")
 
+#----------------- Route to Table ----------------#
 @app.route("/tables")
 def tables():
-    # render an index.html template and pass it the data you retrieved from the database
     return render_template("tables.html")
 
+#----------------- Route to Heatmap ----------------#
 @app.route("/map")
 def HeatMap():
-    # render an index.html template and pass it the data you retrieved from the database
     return render_template("map.html")
 
 
+#----------------- API for Line Charts (Jaquelyns Charts) ----------------#
 @app.route("/api/tornado_data/<state>")
 def api(state = 'all'):
     session = Session(engine)
@@ -70,6 +90,8 @@ def api(state = 'all'):
 
     return jsonify(all_data)
 
+
+#----------------- API for Line Chart (Nicks Chart) ----------------#
 @app.route("/api/annual_summary/<state>")
 def annual_summary(state='all'):
     session = Session(engine)
@@ -106,26 +128,51 @@ def annual_summary(state='all'):
 
     return jsonify(annual_summary)
 
-@app.route("/api/heat_map")
-def heat_map():
-    session = Session(engine)
 
-    results = session.query(tornado_tbl.year, tornado_tbl.state, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
-        func.sum(tornado_tbl.fatalities)).\
-        group_by(tornado_tbl.year, tornado_tbl.state).all()
+# @app.route("/api/heat_map")
+# def heat_map():
+#     session = Session(engine)
 
-    heat_map = []
-    for year, state, torn_sum, injury, fatality in results:
-        heat_map_dict = {}
-        heat_map_dict["year"] = year
-        heat_map_dict["state"] = state
-        heat_map_dict["tornado_sum"] = torn_sum
-        heat_map_dict["injuries"] = int(injury)
-        heat_map_dict["fatalities"] = int(fatality)
-        heat_map.append(heat_map_dict)
-    session.close()
+#     results = session.query(tornado_tbl.year, tornado_tbl.state, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
+#         func.sum(tornado_tbl.fatalities)).\
+#         group_by(tornado_tbl.year, tornado_tbl.state).all()
 
-    return jsonify(annual_summary)
+#     heat_map = []
+#     for year, state, torn_sum, injury, fatality in results:
+#         heat_map_dict = {}
+#         heat_map_dict["year"] = year
+#         heat_map_dict["state"] = state
+#         heat_map_dict["tornado_sum"] = torn_sum
+#         heat_map_dict["injuries"] = int(injury)
+#         heat_map_dict["fatalities"] = int(fatality)
+#         heat_map.append(heat_map_dict)
+#     session.close()
+
+#     return jsonify(annual_summary)
+
+
+#----------------- API for Map and Table ----------------#
+@app.route("/api/tornado_data")
+def data():
+    db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
+    db_cursor = db_conn.cursor()
+    # write a statement that finds all the items in the db and sets it to a variable
+    db_cursor.execute("SELECT * FROM tornado_db ORDER BY year ASC")
+    tornado_table = db_cursor.fetchall()
+
+    #list of dictionaries
+    records = []
+    for row in tornado_table[1:5000]:
+        cols = db_cursor.description
+        record = {}
+        for i in range(len(cols)):
+            record[cols[i].name] = row[i]
+        records.append(record)
+    db_conn.close()
+    
+    # render an index.html template and pass it the data you retrieved from the database
+    return jsonify(records)
+
 
 @app.route("/api/state_charts")
 def state_charts():
@@ -149,6 +196,8 @@ def state_charts():
 
     return jsonify(state_summary)
 
+
+#----------------- API for Bar Chart (Nicks Chart) ----------------#
 @app.route("/api/losses/<state>")
 def losses(state="all"):
     session = Session(engine)
@@ -187,6 +236,7 @@ def losses(state="all"):
     session.close()
 
     return jsonify(loss_summary)
+
 
 # @app.route("/api/tornado_data_years")
 # def api_year():
@@ -261,7 +311,6 @@ def api_state():
 
     db_conn.close()
 
-    # render an index.html template and pass it the data you retrieved from the database
     return jsonify(state_names_dict)
 
 
