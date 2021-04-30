@@ -7,6 +7,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
+import pandas as pd
 
 ########### CONNECT TO DATABASE #############
 engine = create_engine(f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db")
@@ -40,8 +41,8 @@ def HeatMap():
     return render_template("map.html")
 
 
-@app.route("/api/tornado_data")
-def api():
+@app.route("/api/tornado_data/<state>")
+def api(state = 'AL'):
     # postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn
     # db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
     db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
@@ -52,7 +53,7 @@ def api():
 
     #list of dictionaries
     records = []
-    for row in tornado_table[1:5000]:
+    for row in tornado_table:
         cols = db_cursor.description
         record = {}
         for i in range(len(cols)):
@@ -61,6 +62,35 @@ def api():
     db_conn.close()
     # render an index.html template and pass it the data you retrieved from the database
     return jsonify(records)
+
+    # session = Session(engine)    
+    # connect_string = f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db"
+    # sql_engine = sqlalchemy.create_engine(connect_string)
+    # if state == 'all': state = 'state'
+    # query = f"SELECT * FROM tornado_db WHERE tornado_db.state='{state}'"
+    # df = pd.read_sql_query(query, sql_engine)
+    # exported_json = df.to_dict()
+    # print(df)
+    # results = session.query(f" * FROM tornado_tbl WHERE state = {state}")
+    # print(results[0])
+
+    # annual_summary = []
+
+    # for result in results:
+    #     annual_summary_dict = {}
+    #     annual_summary_dict["tornado_num"] = result[1]
+    #     annual_summary_dict["year"] = result[0]
+
+    #     annual_summary_dict["injuries"] = int(result[2])
+    #     annual_summary_dict["fatalities"] = int(result[3])
+    #     annual_summary.append(annual_summary_dict)
+
+    # session.close()
+
+    # return jsonify(annual_summary)
+    # return jsonify(exported_json)
+
+    
 
 @app.route("/api/annual_summary/<state>")
 def annual_summary(state='all'):
