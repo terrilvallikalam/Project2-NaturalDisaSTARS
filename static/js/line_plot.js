@@ -10,7 +10,6 @@ var svgPadding = {
 
 function linePlot(state){
     d3.json(`/api/annual_summary/${state}`).then(function (data){
-        console.log(data);
         const tornadoData = {
             years: [],
             tornSum: [],
