@@ -42,55 +42,33 @@ def HeatMap():
 
 
 @app.route("/api/tornado_data/<state>")
-def api(state = 'AL'):
-    # postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn
-    # db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
-    db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
-    db_cursor = db_conn.cursor()
-    # write a statement that finds all the items in the db and sets it to a variable
-    db_cursor.execute("SELECT * FROM tornado_db ORDER BY year ASC")
-    tornado_table = db_cursor.fetchall()
-
-    #list of dictionaries
-    records = []
-    for row in tornado_table:
-        cols = db_cursor.description
-        record = {}
-        for i in range(len(cols)):
-            record[cols[i].name] = row[i]
-        records.append(record)
-    db_conn.close()
-    # render an index.html template and pass it the data you retrieved from the database
-    return jsonify(records)
-
-    # session = Session(engine)    
-    # connect_string = f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db"
-    # sql_engine = sqlalchemy.create_engine(connect_string)
-    # if state == 'all': state = 'state'
-    # query = f"SELECT * FROM tornado_db WHERE tornado_db.state='{state}'"
-    # df = pd.read_sql_query(query, sql_engine)
-    # exported_json = df.to_dict()
-    # print(df)
-    # results = session.query(f" * FROM tornado_tbl WHERE state = {state}")
-    # print(results[0])
-
-    # annual_summary = []
-
-    # for result in results:
-    #     annual_summary_dict = {}
-    #     annual_summary_dict["tornado_num"] = result[1]
-    #     annual_summary_dict["year"] = result[0]
-
-    #     annual_summary_dict["injuries"] = int(result[2])
-    #     annual_summary_dict["fatalities"] = int(result[3])
-    #     annual_summary.append(annual_summary_dict)
-
-    # session.close()
-
-    # return jsonify(annual_summary)
-    # return jsonify(exported_json)
-
+def api(state = 'all'):
+    session = Session(engine)
+    if state == "all":
+        results = session.query(tornado_tbl.year, tornado_tbl.tornado_num, tornado_tbl.state, tornado_tbl.magnitude, tornado_tbl.injury, tornado_tbl.fatalities, tornado_tbl.loss,\
+            tornado_tbl.latitude, tornado_tbl.longitude, tornado_tbl.miles_traveled, tornado_tbl.width_yards)
+    else:
+        results = session.query(tornado_tbl.year, tornado_tbl.tornado_num, tornado_tbl.state, tornado_tbl.magnitude, tornado_tbl.injury, tornado_tbl.fatalities, tornado_tbl.loss,\
+            tornado_tbl.latitude, tornado_tbl.longitude, tornado_tbl.miles_traveled, tornado_tbl.width_yards).filter_by(state=state).all()
     
+    all_data = []
+    for result in results:
+        all_data_dict = {}
+        all_data_dict["year"] = result[0]
+        all_data_dict["tornado_num"] = result[1]
+        all_data_dict["state"] = result[2]
+        all_data_dict["magnitude"]=result[3]
+        all_data_dict["injuries"] = result[4]
+        all_data_dict["fatalities"] = result[5]
+        all_data_dict["loss"] = result[6]
+        all_data_dict["latitude"] = result[7]
+        all_data_dict["longitude"] = result[8]
+        all_data_dict["miles_traveled"] = result[9]
+        all_data_dict["width_years"] = result[10]
+        all_data.append(all_data_dict)
+    session.close()
+
+    return jsonify(all_data)
 
 @app.route("/api/annual_summary/<state>")
 def annual_summary(state='all'):

@@ -1,6 +1,5 @@
 // New Code
 // function buildCharts() {
-console.log(l)
     function init(){
         var state = 'all'
         // var state = d3.select("select.sel-state").node().value;
@@ -13,7 +12,8 @@ console.log(l)
 
     function bubbleChart(state) {
         d3.json(`/api/tornado_data/${state}`).then(function(data) {
-
+            console.log(data)
+            
             var tornadoNums = [];
             var years = [];
             var magnitudes = [];
@@ -21,7 +21,7 @@ console.log(l)
             var widths = [];
             var fatalities = [];
             var miles = [];
-            console.log=(data)
+          
             data.forEach(tornado => {
                 tornadoNums.push(tornado["tornado_num"])
                 years.push(tornado["year"])
@@ -31,6 +31,10 @@ console.log(l)
                 fatalities.push(tornado["fatalities"])
                 miles.push(tornado["miles_traveled"])
             });
+
+            console.log(years)
+
+           
             
             // Line chart
             // Average tornado magnitude per state over time
