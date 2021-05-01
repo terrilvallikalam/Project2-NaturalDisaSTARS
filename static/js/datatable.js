@@ -1,4 +1,4 @@
-d3.json("/api/tornado_data").then(function(data) {
+d3.json("/api/tornado_table").then(function(data) {
     console.log(data[0]);
 
     $(document).ready(function() {
