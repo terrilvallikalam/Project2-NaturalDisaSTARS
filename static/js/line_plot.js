@@ -1,5 +1,5 @@
-var svgWidth = 600;
-var svgHeight = 900;
+var svgWidth = 500;
+var svgHeight = 500;
 var svgMargin = {
 
 };
@@ -113,9 +113,53 @@ function barChart(state){
 
         Plotly.newPlot("loss-bar", data, layout);
     });
+    
+    d3.json(`/api/monthly_data/${state}`).then(function(data){
+        const monthly_data = {
+            months: [],
+            monthlyCounts: []
+        };
+
+        data.forEach(function(d){
+            monthly_data.months.push(d.months);
+            monthly_data.monthlyCounts.push(d.month_count);
+        });
+        
+        var months = monthly_data.months;
+        var monthlyCounts = monthly_data.monthlyCounts;
+
+        console.log(months);
+        console.log(monthlyCounts);
+
+        var data = [
+            {
+                x: months,
+                y: monthlyCounts,
+                name: "Tornado frequency by Month",
+                type: 'bar'
+            }
+        ];
+
+        var layout = {
+            title: {
+                text: "Months of Year"
+            },
+            margin: svgMargin,
+            padding: svgPadding,
+            width: svgWidth,
+            height: svgHeight,
+            xaxis: {
+                tickmode: "linear"
+                // tick0: months[0],
+                // dtick: 3,
+            }
+        };
+    
+        Plotly.newPlot("monthlyBar", data, layout);
+    });
 };
 
-function bubbleChart(state) {
+function lineCharts(state) {
     d3.json(`/api/tornado_data/${state}`).then(function(data) {
         console.log(data)
         
@@ -213,7 +257,7 @@ function init(){
     var state = "all";
     linePlot(state);
     barChart(state);
-    bubbleChart(state);
+    lineCharts(state);
 };
 
 init();
@@ -223,5 +267,5 @@ function optionChangedState(selection){
     console.log(state)
     linePlot(state);
     barChart(state);
-    bubbleChart(state);
+    lineCharts(state);
 };

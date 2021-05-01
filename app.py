@@ -7,8 +7,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
-import pandas as pd
-from werkzeug.utils import secure_filename
+
 
 ########### CONNECT TO DATABASE #############
 engine = create_engine(f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db")
@@ -128,29 +127,6 @@ def annual_summary(state='all'):
 
     return jsonify(annual_summary)
 
-
-# @app.route("/api/heat_map")
-# def heat_map():
-#     session = Session(engine)
-
-#     results = session.query(tornado_tbl.year, tornado_tbl.state, func.count(tornado_tbl.tornado_num.distinct()), func.sum(tornado_tbl.injury),\
-#         func.sum(tornado_tbl.fatalities)).\
-#         group_by(tornado_tbl.year, tornado_tbl.state).all()
-
-#     heat_map = []
-#     for year, state, torn_sum, injury, fatality in results:
-#         heat_map_dict = {}
-#         heat_map_dict["year"] = year
-#         heat_map_dict["state"] = state
-#         heat_map_dict["tornado_sum"] = torn_sum
-#         heat_map_dict["injuries"] = int(injury)
-#         heat_map_dict["fatalities"] = int(fatality)
-#         heat_map.append(heat_map_dict)
-#     session.close()
-
-#     return jsonify(annual_summary)
-
-
 #----------------- API for Map and Table ----------------#
 @app.route("/api/tornado_data")
 def data():
@@ -162,7 +138,7 @@ def data():
 
     #list of dictionaries
     records = []
-    for row in tornado_table[1:5000]:
+    for row in tornado_table:
         cols = db_cursor.description
         record = {}
         for i in range(len(cols)):
@@ -174,28 +150,28 @@ def data():
     return jsonify(records)
 
 
-@app.route("/api/state_charts")
-def state_charts():
+@app.route("/api/monthly_data/<state>")
+def months_data(state='all'):
     session = Session(engine)
+    
+    if state == "all":
+        results = session.query(tornado_tbl.month, func.count(tornado_tbl.tornado_num))\
+            .group_by(tornado_tbl.month).order_by(tornado_tbl.month.desc()).all()
 
-    results = session.query(tornado_tbl.year, tornado_tbl.state, tornado_tbl.tornado_num, tornado_tbl.injury,\
-        tornado_tbl.fatalities, tornado_tbl.miles_traveled, tornado_tbl.magnitude).all()
+    if state != 'all':
+        results = session.query(tornado_tbl.month, func.count(tornado_tbl.tornado_num))\
+            .group_by(tornado_tbl.month).order_by(tornado_tbl.month.desc())\
+            .filter_by(state=state).all()
 
-    state_summary = []
-    for year, state, torn_sum, injury, fatality, miles, mag in results:
-        state_summary_dict = {}
-        state_summary_dict["year"] = year
-        state_summary_dict["state"] = state
-        state_summary_dict["tornado_sum"] = torn_sum
-        state_summary_dict["injuries"] = injury
-        state_summary_dict["fatalities"] = fatality
-        state_summary_dict["miles_traveled"] = miles
-        state_summary_dict["magnitude"] = mag
-        state_summary.append(state_summary_dict)
+    months_summary = []
+    for months, count_months in results:
+        monthly_data_dict = {}
+        monthly_data_dict["months"] = months
+        monthly_data_dict["month_count"] = count_months
+        months_summary.append(monthly_data_dict)
     session.close()
 
-    return jsonify(state_summary)
-
+    return jsonify(months_summary)
 
 #----------------- API for Bar Chart (Nicks Chart) ----------------#
 @app.route("/api/losses/<state>")
@@ -237,45 +213,8 @@ def losses(state="all"):
 
     return jsonify(loss_summary)
 
-
-# @app.route("/api/tornado_data_years")
-# def api_year():
-#     # postgres://ouvitqtn:BZiZY_67DtjmVHAZ7EtEAu5kMmDuUySX@queenie.db.elephantsql.com:5432/ouvitqtn
-#     # db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
-#     db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
-#     db_cursor = db_conn.cursor()
-#     # write a statement that finds all the items in the db and sets it to a variable
-#     db_cursor.execute("SELECT * FROM tornado_db")
-#     tornado_table = db_cursor.fetchall()
-
-#     #list of dictionaries
-#     records = []
-#     for row in tornado_table:
-#         cols = db_cursor.description
-#         record = {}
-#         for i in range(len(cols)):
-#             record[cols[i].name] = row[i]
-#         records.append(record)
-
-#     year_options = {"year":[]}
-#     year_list = []
-#     i = 0
-#     for record in records:
-#         year = record["year"]
-#         if (year not in year_list):
-#             year_list.append(year)
-#             i += 1
-#     year_list.sort()
-#     year_options["year"].append(year_list)
-#     db_conn.close()
-    
-#     # render an index.html template and pass it the data you retrieved from the database
-#     return jsonify(year_options)
-
-
 @app.route("/api/tornado_data_state")
 def api_state():
-    # postgres://ouvitqtn:BZiZY_67DtjmVHAZ7EtEAu5kMmDuUySX@queenie.db.elephantsql.com:5432/ouvitqtn
     # db_conn = psycopg2.connect(database="ouvitqtn", user="ouvitqtn", password=f"{sqlpassword}", host="queenie.db.elephantsql.com", port="5432")
     db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
     db_cursor = db_conn.cursor()
@@ -304,6 +243,7 @@ def api_state():
     
     # https://gist.github.com/rogerallen/1583593
     abbrev_us_state = dict(map(reversed, us_state_abbrev.items()))
+    print(abbrev_us_state)
     state_names_dict = {"state_name":[], "abbr":[]}
     for abbr in states:
         state_names_dict["abbr"].append(abbr)
