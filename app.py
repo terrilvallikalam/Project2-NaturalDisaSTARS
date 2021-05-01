@@ -149,6 +149,28 @@ def data():
     # render an index.html template and pass it the data you retrieved from the database
     return jsonify(records)
 
+    #----------------- API for Map and Table ----------------#
+@app.route("/api/tornado_table")
+def table():
+    db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
+    db_cursor = db_conn.cursor()
+    # write a statement that finds all the items in the db and sets it to a variable
+    db_cursor.execute("SELECT * FROM tornado_db ORDER BY year ASC")
+    tornado_table = db_cursor.fetchall()
+
+    #list of dictionaries
+    records = []
+    for row in tornado_table[0:500]:
+        cols = db_cursor.description
+        record = {}
+        for i in range(len(cols)):
+            record[cols[i].name] = row[i]
+        records.append(record)
+    db_conn.close()
+    
+    # render an index.html template and pass it the data you retrieved from the database
+    return jsonify(records)
+
 
 @app.route("/api/monthly_data/<state>")
 def months_data(state='all'):
