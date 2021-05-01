@@ -10,7 +10,7 @@ import psycopg2
 
 
 ########### CONNECT TO DATABASE #############
-engine = create_engine(f"postgres://postgres:{sqlpassword}@localhost:5432/tornado_db")
+engine = create_engine(f"postgresql://jihvppvfpdqzgq:22ec5866a4a15037b6e794bcf713449be749a4ec26c9efb6c28880d3ac7a802d@ec2-23-22-191-232.compute-1.amazonaws.com:5432/d96s8h2qd7teih")
 # engine = create_engine(f"postgres://ouvitqtn:{sqlpassword}@queenie.db.elephantsql.com:5432/ouvitqtn")
 Base = automap_base()
 Base.prepare(engine, reflect=True)
@@ -130,24 +130,20 @@ def annual_summary(state='all'):
 #----------------- API for Map and Table ----------------#
 @app.route("/api/tornado_data")
 def data():
-    db_conn = psycopg2.connect(host="localhost", database="tornado_db", user="postgres", password=f"{sqlpassword}", port="5432")
-    db_cursor = db_conn.cursor()
-    # write a statement that finds all the items in the db and sets it to a variable
-    db_cursor.execute("SELECT * FROM tornado_db ORDER BY year ASC")
-    tornado_table = db_cursor.fetchall()
+    session = Session(engine)
 
-    #list of dictionaries
-    records = []
-    for row in tornado_table:
-        cols = db_cursor.description
-        record = {}
-        for i in range(len(cols)):
-            record[cols[i].name] = row[i]
-        records.append(record)
-    db_conn.close()
-    
-    # render an index.html template and pass it the data you retrieved from the database
-    return jsonify(records)
+    results = session.query(tornado_tbl.tornado_num, tornado_tbl.latitude, tornado_tbl.longitude).all()
+
+    heatMap = []
+    for torn_num, lat, lng in results:
+        heatMap_dict = {}
+        heatMap_dict["tornado_num"] = torn_num
+        heatMap_dict["latitude"] = lat
+        heatMap_dict["longitude"] = lng
+        heatMap.append(heatMap_dict)
+    session.close()
+
+    return jsonify(heatMap)
 
     #----------------- API for Map and Table ----------------#
 @app.route("/api/tornado_table")
