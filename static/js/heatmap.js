@@ -1,6 +1,6 @@
 var myMap = L.map("map", {
     center: [39, -97],
-    zoom: 2
+    zoom: 4
   });
   
   // Adding the tile layer
@@ -95,8 +95,8 @@ var myMap = L.map("map", {
       }}
 
     var heat = L.heatLayer(location, {
-      radius: 20,
-      blur: 3,
+      radius: 70,
+      blur: 0,
       //colorscale: "Earth"
     }).addTo(myMap);
   
