@@ -243,8 +243,7 @@ def api_state():
     
     # https://gist.github.com/rogerallen/1583593
     abbrev_us_state = dict(map(reversed, us_state_abbrev.items()))
-    print(abbrev_us_state)
-    state_names_dict = {"state_name":[], "abbr":[]}
+    state_names_dict = {"state_name":["All States"], "abbr":["all"]}
     for abbr in states:
         state_names_dict["abbr"].append(abbr)
         state_names_dict["state_name"].append(abbrev_us_state[abbr])

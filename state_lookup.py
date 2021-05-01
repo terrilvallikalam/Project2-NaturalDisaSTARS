@@ -1,4 +1,5 @@
 us_state_abbrev = {
+    'All States': 'all',
     'Alabama': 'AL',
     'Alaska': 'AK',
     'American Samoa': 'AS',
