@@ -1,2 +1,20 @@
 # Project2-NaturalDisaSTARS
 Project 2
+
+// ReadMe:
+For our project, we decided to work with tornado data provided by the National Oceanic and Atmospheric Administration that encompassed data from 1950 through 2019 for the United States and outlying territories. While the dataset featured 65,000+ rows, our group wanted to only focus on certain aspects of the dataset. 
+
+Once we downloaded our dataset, we went through steps to clean the data via Jupyter Lab. This entailed converting data in columns to be of the same data scale, dropping unnecessary columns we didn’t need for our analysis, and renaming the columns we would be keeping to make it easier during our analysis. After analyzing our data, we realized that since tornadoes can cross over into multiple states, the tornado ID column had duplicates; we decided to keep these duplicates so as to accurately represent the loss and casualties that affected each state. We were also able to create some high-level graphs of our data using Plotly and Matplotlib within Jupyter Lab; this gave us a better visualization of what to expect when we actually graphed our data. 
+
+After cleaning our data, we connected it to PostgreSQL via an engine. Within PostgreSQL we were able to query into our dataset to make sure it successfully transferred over. Once we were confident our data was there, we were able to use SQLAlchemy to call upon our data. We then created a number of APIs to consume different subsets of our data in preparation for creating charts for our dashboard. 
+
+When creating our dashboard, we knew we would need a multitude of different files and templates. We created folders to house our starter files, as well as other template files that we would be using. The first file we began to work on was our index.html. This file dictated what our dashboard would look like, so we thought it would be best to determine how that looked and make changes as we saw fit. We also created an app.py file to launch our dashboard from VBS; this file was also where we housed all API calls that we made using Flask to connect to SQLAlchemy. In addition, we also created JavaScript files for all the charts and filters we created. After creating these charts, we also created respective HTML files to correspond to the tables and map we had made with JS. Once we had those linked to each other, we added them to our main HTML file (index.html). Now that we had everything linked together, we are successfully able to launch a dashboard that displays our tornado data.
+
+// Data Findings:
+Based on our “Damages by Year” graph, we can see that the most damaging tornadoes occurred in 2011, approximately 10 billions dollars worth of damage.
+That being said, the largest number of tornadoes occurred in 2004. In 2004, there were 1,817 tornadoes, whereas 2011 only had 1,691 tornadoes.
+When tornado damages spike in 2011, there was a smaller spike in the number of tornadoes occurring, but there also was a spike in tornado magnitude that could have contributed to the vast damages. 
+The average magnitude and average total miles traveled per tornado trended downwards from 1950 to 2019 despite the number of tornadoes gradually increasing over time. This also could explain why the number of injuries and fatalities decreased over time. 
+There were spikes for magnitude and miles traveled in the 1950s and 1970s, which could have been a result of more active tornado seasons or stronger storms during that time. 
+Looking at our monthly tornado frequency bar chart, we can see that most tornadoes occurred during the warmer months of April through July, specifically in May and June. Since tornadoes form as a result of warm, moist air, this finding is understandable.
+Given the name “Tornado Alley”, it only seems fitting that most tornadoes that occur take place in this certain region of the United States. By looking at our heat map and seeing the brightly-colored states starting from the Gulf of Mexico and branching up toward the Midwest, we can see that this tornado density does in fact corroborate what we expected to find.
