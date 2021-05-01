@@ -1,5 +1,5 @@
-var svgWidth = 600;
-var svgHeight = 900;
+var svgWidth = 800;
+var svgHeight = 600;
 var svgMargin = {
 
 };
